@@ -15,11 +15,14 @@ func Startserver(ha http.Handler) {
 	StartserverWithAuth(ha, nil)
 }
 
+var DefPort = "8080"
+var WithAuth = false
+
 //Starts a server with the handler ha and the user/pass validator v
 func StartserverWithAuth(ha http.Handler, v func(string, string) bool) {
-	httpPort := flag.String("httpPort", "8080", "http port")
+	httpPort := flag.String("httpPort", DefPort, "http port")
 	httpsPort := flag.Int("httpsPort", 0, "https port. tls not started if not provided. requires server.crt & server.key")
-	withBasicAuth := flag.Bool("withAuth", false, "should Basic Authentication be enabled")
+	withBasicAuth := flag.Bool("withAuth", WithAuth, "should Basic Authentication be enabled")
 	flag.Parse()
 
 	//Allow spanning go routines and wait for them to complete
