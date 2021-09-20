@@ -12,6 +12,11 @@ import (
 )
 
 func Startserver(ha http.Handler) {
+	StartserverWithAuth(ha, nil)
+}
+
+//Starts a server with the handler ha and the user/pass validator v
+func StartserverWithAuth(ha http.Handler, v func(string, string) bool) {
 	httpPort := flag.String("httpPort", "8080", "http port")
 	httpsPort := flag.Int("httpsPort", 0, "https port. tls not started if not provided. requires server.crt & server.key")
 	withBasicAuth := flag.Bool("withAuth", true, "should Basic Authentication be enabled")
@@ -30,7 +35,10 @@ func Startserver(ha http.Handler) {
 	//Optionally wrap the handler provided in Basic Auth
 	if *withBasicAuth {
 		//Provide your user/password validating function here
-		http.Handle("/", BasicAuthHandler(ha, func(s1 string, s2 string) bool { return true }))
+		if v == nil {
+			v = func(s1 string, s2 string) bool { return true }
+		}
+		http.Handle("/", BasicAuthHandler(ha, v))
 	} else {
 		http.Handle("/", ha)
 	}
