@@ -1,4 +1,4 @@
-package main
+package gohttpservice
 
 import (
 	"context"
@@ -19,7 +19,7 @@ func Startserver(ha http.Handler) {
 func StartserverWithAuth(ha http.Handler, v func(string, string) bool) {
 	httpPort := flag.String("httpPort", "8080", "http port")
 	httpsPort := flag.Int("httpsPort", 0, "https port. tls not started if not provided. requires server.crt & server.key")
-	withBasicAuth := flag.Bool("withAuth", true, "should Basic Authentication be enabled")
+	withBasicAuth := flag.Bool("withAuth", false, "should Basic Authentication be enabled")
 	flag.Parse()
 
 	//Allow spanning go routines and wait for them to complete
